@@ -1,0 +1,1525 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hệ Thống Trắc Nghiệm Quốc Phòng - Quân Đội Nhân Dân Việt Nam</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==========================================================
+       THEME COBALT & ORANGE - GLASSMORPHISM MODERN DESIGN
+       ========================================================== */
+    :root {
+      --cobalt-deep: #051329;
+      --cobalt-dark: #092042;
+      --cobalt-blue: #0047AB;
+      --cobalt-bright: #1E6FFF;
+      --orange-primary: #FF6600;
+      --orange-hover: #FF7D26;
+      --orange-glow: rgba(255, 102, 0, 0.45);
+      --glass-bg: rgba(10, 29, 61, 0.65);
+      --glass-card: rgba(14, 38, 77, 0.55);
+      --glass-border: rgba(255, 255, 255, 0.12);
+      --glass-border-focus: rgba(255, 102, 0, 0.6);
+      --text-main: #F8FAFC;
+      --text-muted: #94A3B8;
+      --success: #10B981;
+      --danger: #EF4444;
+      --warning: #F59E0B;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      min-height: 100vh;
+      background-color: var(--cobalt-deep);
+      background-image: 
+        radial-gradient(at 0% 0%, rgba(0, 71, 171, 0.5) 0px, transparent 55%),
+        radial-gradient(at 100% 10%, rgba(255, 102, 0, 0.3) 0px, transparent 50%),
+        radial-gradient(at 50% 100%, rgba(0, 71, 171, 0.6) 0px, transparent 60%);
+      background-attachment: fixed;
+      color: var(--text-main);
+      overflow-x: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px 14px 60px;
+    }
+
+    /* Ambient Background Orbs */
+    .ambient-glow {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(120px);
+      z-index: -1;
+      pointer-events: none;
+    }
+    .glow-1 {
+      top: 15%;
+      left: -80px;
+      width: 320px;
+      height: 320px;
+      background: var(--cobalt-blue);
+      opacity: 0.6;
+    }
+    .glow-2 {
+      bottom: 10%;
+      right: -80px;
+      width: 340px;
+      height: 340px;
+      background: var(--orange-primary);
+      opacity: 0.35;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    /* GLASS CARD BASE */
+    .glass-card {
+      background: var(--glass-card);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      transition: all 0.3s ease;
+    }
+
+    /* HEADER */
+    .quiz-header {
+      text-align: center;
+      margin-bottom: 24px;
+      padding: 10px 0;
+    }
+    .badge-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      background: rgba(255, 102, 0, 0.15);
+      border: 1px solid rgba(255, 102, 0, 0.4);
+      color: var(--orange-primary);
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      border-radius: 999px;
+      margin-bottom: 12px;
+    }
+    .quiz-header h1 {
+      font-size: 1.85rem;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      background: linear-gradient(135deg, #FFFFFF 40%, #FF9A52 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 6px;
+    }
+    .quiz-header p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    /* BUTTONS */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-weight: 700;
+      font-size: 1rem;
+      border-radius: 14px;
+      padding: 14px 28px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .btn-orange {
+      background: linear-gradient(135deg, var(--orange-primary), var(--orange-hover));
+      color: #FFFFFF;
+      box-shadow: 0 8px 24px var(--orange-glow);
+    }
+    .btn-orange:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 28px rgba(255, 102, 0, 0.6);
+    }
+    .btn-orange:active {
+      transform: translateY(0);
+    }
+    .btn-outline {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--glass-border);
+      color: var(--text-main);
+    }
+    .btn-outline:hover {
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    /* SCREEN 1: LOGIN / ENROLL */
+    #view-login {
+      padding: 40px 28px;
+      text-align: center;
+    }
+    .login-icon {
+      width: 72px;
+      height: 72px;
+      background: linear-gradient(135deg, rgba(0, 71, 171, 0.5), rgba(255, 102, 0, 0.3));
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      margin: 0 auto 20px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+    }
+    .input-group {
+      margin: 26px auto 20px;
+      max-width: 440px;
+      text-align: left;
+    }
+    .input-group label {
+      display: block;
+      font-size: 0.88rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+    .input-field {
+      width: 100%;
+      background: rgba(5, 19, 41, 0.7);
+      border: 1px solid var(--glass-border);
+      color: #FFFFFF;
+      padding: 14px 18px;
+      border-radius: 12px;
+      font-size: 1rem;
+      outline: none;
+      transition: all 0.25s ease;
+    }
+    .input-field:focus {
+      border-color: var(--orange-primary);
+      box-shadow: 0 0 0 3px rgba(255, 102, 0, 0.25);
+    }
+    .rules-box {
+      max-width: 440px;
+      margin: 0 auto 26px;
+      padding: 14px;
+      border-radius: 12px;
+      background: rgba(0, 71, 171, 0.15);
+      border: 1px solid rgba(0, 71, 171, 0.3);
+      font-size: 0.85rem;
+      color: #CBD5E1;
+      text-align: left;
+      line-height: 1.5;
+    }
+    .rules-box strong {
+      color: #FFA366;
+    }
+
+    /* SCREEN 2: QUIZ */
+    #view-quiz {
+      display: none;
+    }
+
+    /* STICKY HUD BAR */
+    .hud-bar {
+      position: sticky;
+      top: 14px;
+      z-index: 50;
+      padding: 12px 20px;
+      margin-bottom: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      background: rgba(8, 24, 51, 0.85);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+    }
+    .hud-user {
+      display: flex;
+      flex-direction: column;
+    }
+    .hud-user-name {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: #FFFFFF;
+    }
+    .hud-user-sub {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+    .hud-stats {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .hud-badge {
+      font-size: 0.82rem;
+      font-weight: 700;
+      padding: 6px 12px;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid var(--glass-border);
+    }
+    .badge-tab-warn {
+      color: #F87171;
+      background: rgba(239, 68, 68, 0.12);
+      border-color: rgba(239, 68, 68, 0.3);
+    }
+
+    /* QUESTION CARD */
+    .question-list {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .question-card {
+      padding: 24px;
+      position: relative;
+    }
+    .q-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .q-number {
+      font-size: 0.8rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--orange-primary);
+    }
+    .q-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      line-height: 1.5;
+      margin-bottom: 18px;
+      color: #FFFFFF;
+    }
+
+    /* OPTION CHOICES */
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+    .option-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 14px 16px;
+      background: rgba(6, 18, 38, 0.55);
+      border: 1px solid var(--glass-border);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-size: 0.95rem;
+      color: #E2E8F0;
+    }
+    .option-item:hover {
+      background: rgba(0, 71, 171, 0.25);
+      border-color: rgba(255, 255, 255, 0.25);
+      transform: translateX(3px);
+    }
+    .option-item input[type="radio"] {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      border: 2px solid #64748B;
+      border-radius: 50%;
+      outline: none;
+      transition: all 0.2s ease;
+      position: relative;
+      flex-shrink: 0;
+    }
+    .option-item input[type="radio"]:checked {
+      border-color: var(--orange-primary);
+      background: var(--orange-primary);
+      box-shadow: 0 0 10px var(--orange-glow);
+    }
+    .option-item.selected {
+      background: rgba(255, 102, 0, 0.12);
+      border-color: rgba(255, 102, 0, 0.5);
+      color: #FFFFFF;
+      font-weight: 600;
+    }
+
+    /* QUIZ FOOTER SUBMIT */
+    .quiz-footer {
+      margin-top: 32px;
+      text-align: center;
+    }
+
+    /* SCREEN 3: RESULT REVIEW */
+    #view-result {
+      display: none;
+    }
+    .result-summary {
+      padding: 36px 24px;
+      text-align: center;
+      margin-bottom: 26px;
+    }
+    .score-circle {
+      width: 130px;
+      height: 130px;
+      margin: 0 auto 20px;
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle, rgba(0, 71, 171, 0.4) 0%, rgba(255, 102, 0, 0.15) 100%);
+      border: 3px solid var(--orange-primary);
+      box-shadow: 0 0 30px var(--orange-glow);
+    }
+    .score-big {
+      font-size: 2.3rem;
+      font-weight: 800;
+      color: #FFFFFF;
+      line-height: 1;
+    }
+    .score-scale {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+    .result-stats-row {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin: 18px 0 10px;
+    }
+    .stat-pill {
+      padding: 8px 18px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--glass-border);
+      font-size: 0.88rem;
+    }
+    .stat-pill strong {
+      color: #FFFFFF;
+    }
+
+    /* REVIEW QUESTION CARDS */
+    .review-status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 10px;
+      border-radius: 8px;
+      font-size: 0.78rem;
+      font-weight: 700;
+    }
+    .badge-correct {
+      background: rgba(16, 185, 129, 0.2);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      color: #34D399;
+    }
+    .badge-wrong {
+      background: rgba(239, 68, 68, 0.2);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      color: #F87171;
+    }
+
+    .option-item.state-correct {
+      background: rgba(16, 185, 129, 0.15);
+      border-color: rgba(16, 185, 129, 0.6);
+      color: #34D399;
+      font-weight: 600;
+    }
+    .option-item.state-user-wrong {
+      background: rgba(239, 68, 68, 0.15);
+      border-color: rgba(239, 68, 68, 0.6);
+      color: #F87171;
+      text-decoration: line-through;
+    }
+
+    .explanation-box {
+      margin-top: 14px;
+      padding: 12px 14px;
+      border-radius: 10px;
+      background: rgba(0, 71, 171, 0.2);
+      border: 1px solid rgba(0, 71, 171, 0.4);
+      font-size: 0.85rem;
+      color: #CBD5E1;
+      line-height: 1.5;
+    }
+    .explanation-box strong {
+      color: #FFA366;
+    }
+
+    /* MODAL POPUPS */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(3, 10, 24, 0.75);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .modal-dialog {
+      background: var(--cobalt-dark);
+      border: 1px solid rgba(255, 102, 0, 0.4);
+      border-radius: 20px;
+      max-width: 440px;
+      width: 100%;
+      padding: 30px 24px;
+      text-align: center;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    }
+    .modal-icon {
+      font-size: 42px;
+      margin-bottom: 14px;
+    }
+    .modal-title {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: #FFFFFF;
+      margin-bottom: 10px;
+    }
+    .modal-msg {
+      font-size: 0.92rem;
+      color: #CBD5E1;
+      line-height: 1.5;
+      margin-bottom: 22px;
+    }
+
+    /* RESPONSIVE BREAKPOINTS */
+    @media (max-width: 640px) {
+      body {
+        padding: 16px 10px 40px;
+      }
+      .quiz-header h1 {
+        font-size: 1.45rem;
+      }
+      .hud-bar {
+        padding: 10px 14px;
+      }
+      .hud-stats {
+        gap: 8px;
+      }
+      .hud-badge {
+        font-size: 0.75rem;
+        padding: 5px 8px;
+      }
+      .btn {
+        padding: 12px 20px;
+        font-size: 0.92rem;
+      }
+      .question-card {
+        padding: 18px 14px;
+      }
+      .q-title {
+        font-size: 0.98rem;
+      }
+      .option-item {
+        font-size: 0.88rem;
+        padding: 12px 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Ambient Glow Effects -->
+  <div class="ambient-glow glow-1"></div>
+  <div class="ambient-glow glow-2"></div>
+
+  <div class="container">
+    <!-- Header chung -->
+    <header class="quiz-header">
+      <div class="badge-pill">QĐND Việt Nam • Kiểm Tra Kiến Thức</div>
+      <h1>Hệ Thống Trắc Nghiệm Quân Sự</h1>
+      <p>Ngân hàng 50 câu • Trích xuất ngẫu nhiên 20 câu • Hệ thống kiểm soát bảo mật</p>
+    </header>
+
+    <!-- ==================== VIEW 1: ĐĂNG NHẬP NHẬP TÊN ==================== -->
+    <main id="view-login" class="glass-card">
+      <div class="login-icon">🛡️</div>
+      <h2 style="font-size: 1.4rem; font-weight: 800; margin-bottom: 6px;">Bắt Đầu Bài Kiểm Tra</h2>
+      <p style="color: var(--text-muted); font-size: 0.9rem;">Vui lòng nhập họ và tên của bạn để tạo phiên làm bài.</p>
+
+      <div class="input-group">
+        <label for="studentNameInput">Họ và tên thí sinh:</label>
+        <input 
+          type="text" 
+          id="studentNameInput" 
+          class="input-field" 
+          placeholder="Ví dụ: Nguyễn Văn A" 
+          autocomplete="name"
+          maxlength="50"
+        />
+      </div>
+
+      <div class="rules-box">
+        <strong>⚠️ Quy chế phòng thi trực tuyến:</strong>
+        <ul style="padding-left: 18px; margin-top: 6px; display: flex; flex-direction: column; gap: 4px;">
+          <li>Hệ thống lấy <strong>20 câu hỏi ngẫu nhiên</strong> từ kho đề.</li>
+          <li><strong>Rời khỏi tab lần 1:</strong> Hệ thống hiện cảnh báo vi phạm.</li>
+          <li><strong>Rời khỏi tab lần 2:</strong> Hệ thống tự động khoá và nộp bài ngay lập tức.</li>
+          <li>Kết quả và giải thích chi tiết sẽ hiển thị ngay sau khi nộp bài.</li>
+        </ul>
+      </div>
+
+      <button id="btnStart" class="btn btn-orange" style="width: 100%; max-width: 440px;">
+        Vào Làm Bài Thi 🚀
+      </button>
+    </main>
+
+    <!-- ==================== VIEW 2: LÀM BÀI QUIZ ==================== -->
+    <section id="view-quiz">
+      <!-- Sticky HUD -->
+      <div class="hud-bar glass-card">
+        <div class="hud-user">
+          <span class="hud-user-name" id="hudName">Thí sinh</span>
+          <span class="hud-user-sub">Bài thi trắc nghiệm 20 câu</span>
+        </div>
+        <div class="hud-stats">
+          <div class="hud-badge" id="hudProgress">Đã làm: 0/20</div>
+          <div class="hud-badge badge-tab-warn" id="hudViolations">Vi phạm tab: 0/2</div>
+        </div>
+      </div>
+
+      <!-- Danh sách câu hỏi -->
+      <div class="question-list" id="questionContainer"></div>
+
+      <!-- Footer nộp bài -->
+      <div class="quiz-footer">
+        <button id="btnSubmitQuiz" class="btn btn-orange" style="min-width: 240px;">
+          Nộp Bài Kiểm Tra 📝
+        </button>
+      </div>
+    </section>
+
+    <!-- ==================== VIEW 3: HIỂN THỊ KẾT QUẢ ==================== -->
+    <section id="view-result">
+      <div class="result-summary glass-card">
+        <div class="score-circle">
+          <span class="score-big" id="resultScore">0</span>
+          <span class="score-scale">Thang điểm 10</span>
+        </div>
+        <h2 style="font-size: 1.45rem; font-weight: 800; margin-bottom: 4px;" id="resultGreeting">Kết Quả Đánh Giá</h2>
+        <p style="color: var(--text-muted); font-size: 0.9rem;" id="resultStudentMeta">Họ tên thí sinh</p>
+
+        <div class="result-stats-row">
+          <div class="stat-pill">Số câu đúng: <strong id="resultCorrectCount">0/20</strong></div>
+          <div class="stat-pill">Tỷ lệ chính xác: <strong id="resultAccuracy">0%</strong></div>
+          <div class="stat-pill">Cảnh báo tab: <strong id="resultViolations">0</strong></div>
+          <div class="stat-pill">Trạng thái: <strong id="resultStatusText">Đã hoàn thành</strong></div>
+        </div>
+
+        <div style="margin-top: 24px; display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
+          <button id="btnRestart" class="btn btn-outline">
+            🔄 Làm Đề Mới (20 câu khác)
+          </button>
+        </div>
+      </div>
+
+      <!-- Chi tiết giải thích từng câu hỏi -->
+      <h3 style="font-size: 1.25rem; font-weight: 800; margin: 30px 0 16px; color: #FFFFFF;">
+        Chi Tiết Bài Làm & Đáp Án Chuẩn Xác
+      </h3>
+      <div class="question-list" id="reviewContainer"></div>
+    </section>
+  </div>
+
+  <!-- MODAL CẢNH BÁO VI PHẠM RỜI TAB LẦN 1 -->
+  <div id="modalTabWarning" class="modal-overlay">
+    <div class="modal-dialog">
+      <div class="modal-icon">⚠️</div>
+      <h3 class="modal-title" style="color: #F59E0B;">CẢNH BÁO VI PHẠM (LẦN 1)</h3>
+      <p class="modal-msg">
+        Bạn vừa chuyển tab hoặc rời khỏi cửa sổ làm bài thi!<br><br>
+        <strong>Chú ý:</strong> Nếu bạn rời khỏi tab thêm <strong>1 lần nữa</strong>, hệ thống sẽ <strong>tự động thu bài ngay lập tức</strong> và ghi nhận kết quả hiện tại.
+      </p>
+      <button id="btnDismissWarning" class="btn btn-orange" style="width: 100%;">
+        Tôi Đã Hiểu, Tiếp Tục Làm Bài
+      </button>
+    </div>
+  </div>
+
+  <!-- MODAL THÔNG BÁO TỰ ĐỘNG THU BÀI DO RỜI TAB LẦN 2 -->
+  <div id="modalAutoSubmit" class="modal-overlay">
+    <div class="modal-dialog">
+      <div class="modal-icon">🚫</div>
+      <h3 class="modal-title" style="color: #EF4444;">ĐÃ TỰ ĐỘNG NỘP BÀI</h3>
+      <p class="modal-msg">
+        Bạn đã vi phạm quy chế thoát màn hình/đổi tab <strong>lần thứ 2</strong>.<br><br>
+        Hệ thống đang tiến hành chấm điểm và lưu kết quả bài thi...
+      </p>
+    </div>
+  </div>
+
+  <script>
+    /* ==========================================================
+       1. CẤU HÌNH CLOUDFLARE WORKER ENDPOINT
+       ========================================================== */
+    // Thay đổi URL bên dưới thành URL Worker của bạn khi deploy
+    const WORKER_ENDPOINT = "https://your-quiz-worker.workers.dev/submit";
+
+    /* ==========================================================
+       2. KHO 50 CÂU HỎI TRẮC NGHIỆM ĐẦY ĐỦ TỪ DỮ LIỆU
+       ========================================================== */
+    const QUESTION_BANK = [
+      {
+        id: 1,
+        question: "Đội Việt Nam Tuyên truyền Giải phóng quân, tiền thân của Quân đội nhân dân Việt Nam, được thành lập vào ngày tháng năm nào?",
+        options: ["A. 22/12/1944", "B. 19/08/1945", "C. 15/05/1945", "D. 22/10/1963"],
+        answer: "A",
+        explain: "Đội Việt Nam Tuyên truyền Giải phóng quân được thành lập ngày 22/12/1944 tại khu rừng giữa hai tổng Hoàng Hoa Thám và Trần Hưng Đạo thuộc huyện Nguyên Bình, tỉnh Cao Bằng."
+      },
+      {
+        id: 2,
+        question: "Khi mới thành lập vào ngày 22/12/1944, Đội Việt Nam Tuyên truyền Giải phóng quân có quân số bao nhiêu cán bộ, chiến sĩ?",
+        options: ["A. 30 cán bộ, chiến sĩ", "B. 34 cán bộ, chiến sĩ", "C. 36 cán bộ, chiến sĩ", "D. 40 cán bộ, chiến sĩ"],
+        answer: "B",
+        explain: "Ban đầu, Đội Việt Nam Tuyên truyền Giải phóng quân có quân số gồm 34 cán bộ, chiến sĩ đặt dưới sự chỉ huy trực tiếp của đồng chí Võ Nguyên Giáp."
+      },
+      {
+        id: 3,
+        question: "Hai trận đánh đầu tiên mở đầu cho truyền thống \"đánh thắng ngay trận đầu\" của Đội Việt Nam Tuyên truyền Giải phóng quân là:",
+        options: ["A. Trận Phai Khắt và Nà Ngần", "B. Trận Đông Khê và Thất Khê", "C. Trận Đoan Hùng và Sông Lô", "D. Trận Vạn Tường và Núi Thành"],
+        answer: "A",
+        explain: "Chỉ hai ngày sau khi thành lập, đội đã mưu trí, bất ngờ đánh thắng liên tiếp hai trận Phai Khắt và Nà Ngần."
+      },
+      {
+        id: 4,
+        question: "Ngày 15/5/1945, Đội Việt Nam Tuyên truyền Giải phóng quân sáp nhập với lực lượng Cứu quốc quân và lấy tên gọi mới là gì?",
+        options: ["A. Vệ quốc đoàn", "B. Quân đội quốc gia Việt Nam", "C. Việt Nam Giải phóng quân", "D. Quân đội nhân dân Việt Nam"],
+        answer: "C",
+        explain: "Ngày 15/5/1945, Đội Việt Nam Tuyên truyền Giải phóng quân sáp nhập với Cứu quốc quân đổi tên thành Việt Nam Giải phóng quân."
+      },
+      {
+        id: 5,
+        question: "Ba chức năng cơ bản của Quân đội nhân dân Việt Nam được Đảng và Bác Hồ xác định là gì?",
+        options: [
+          "A. Đội quân phòng thủ, đội quân bảo đảm, đội quân đối ngoại",
+          "B. Đội quân chiến đấu, đội quân công tác, đội quân lao động sản xuất",
+          "C. Đội quân tác chiến, đội quân trinh sát, đội quân hậu cần",
+          "D. Đội quân cơ động, đội quân đóng quân, đội quân tăng gia sản xuất"
+        ],
+        answer: "B",
+        explain: "Ba chức năng cơ bản của Quân đội ta là: Đội quân chiến đấu, đội quân công tác và đội quân lao động sản xuất."
+      },
+      {
+        id: 6,
+        question: "Theo tinh thần Nghị quyết Đại hội XIII của Đảng, mục tiêu xây dựng Quân đội nhân dân Việt Nam đến năm 2025 là gì?",
+        options: [
+          "A. Hoàn thành hiện đại hóa toàn bộ các quân chủng, binh chủng",
+          "B. Cơ bản xây dựng Quân đội tinh, gọn, mạnh, tạo tiền đề vững chắc phấn đấu năm 2030 hiện đại",
+          "C. Tăng gấp đôi số lượng quân đoàn cơ động chủ lực",
+          "D. Chuyển đổi toàn bộ lục quân sang cơ giới hóa hoàn toàn"
+        ],
+        answer: "B",
+        explain: "Nghị quyết Đại hội XIII xác định: Đến năm 2025, cơ bản xây dựng Quân đội tinh, gọn, mạnh, tạo tiền đề vững chắc, phấn đấu năm 2030 xây dựng QĐND cách mạng, chính quy, tinh nhuệ, hiện đại."
+      },
+      {
+        id: 7,
+        question: "Trong cơ cấu Nhà nước và Quân đội, người giữ cương vị chỉ huy cao nhất của Quân đội nhân dân và Dân quân tự vệ là ai?",
+        options: [
+          "A. Chủ tịch nước Cộng hòa xã hội chủ nghĩa Việt Nam",
+          "B. Bộ trưởng Bộ Quốc phòng",
+          "C. Tổng Tham mưu trưởng Quân đội nhân dân Việt Nam",
+          "D. Chủ nhiệm Tổng cục Chính trị"
+        ],
+        answer: "B",
+        explain: "Bộ trưởng Bộ Quốc phòng là người chỉ huy cao nhất của Quân đội nhân dân và Dân quân tự vệ."
+      },
+      {
+        id: 8,
+        question: "Cơ quan nào là cơ quan chỉ huy, điều hành Quân đội nhân dân và Dân quân tự vệ, chỉ huy các hoạt động quân sự?",
+        options: [
+          "A. Tổng cục Chính trị",
+          "B. Bộ Tổng Tham mưu",
+          "C. Tổng cục Hậu cần - Kỹ thuật",
+          "D. Viện Chiến lược quốc phòng"
+        ],
+        answer: "B",
+        explain: "Bộ Tổng Tham mưu là cơ quan chỉ huy, điều hành Quân đội nhân dân và Dân quân tự vệ, tổ chức chỉ đạo sự phát triển và chỉ huy các hoạt động quân sự."
+      },
+      {
+        id: 9,
+        question: "Cơ quan nào đảm nhiệm công tác đảng, công tác chính trị trong toàn quân dưới sự lãnh đạo của Ban Bí thư và Quân ủy Trung ương?",
+        options: [
+          "A. Bộ Tổng Tham mưu",
+          "B. Tổng cục Hậu cần - Kỹ thuật",
+          "C. Tổng cục Chính trị",
+          "D. Tổng cục Tình báo quốc phòng"
+        ],
+        answer: "C",
+        explain: "Tổng cục Chính trị đảm nhiệm công tác đảng, công tác chính trị trong toàn quân."
+      },
+      {
+        id: 10,
+        question: "Cơ quan cấp tổng cục nào của Bộ Quốc phòng giữ vai trò đầu ngành trực tiếp chỉ đạo nghiệp vụ tình báo đối với hệ thống quân báo - trinh sát toàn quân?",
+        options: [
+          "A. Tổng cục Công nghiệp quốc phòng",
+          "B. Tổng cục Tình báo quốc phòng (TC2)",
+          "C. Cục Quân lực - Bộ Tổng Tham mưu",
+          "D. Cục Tác chiến điện tử"
+        ],
+        answer: "B",
+        explain: "Tổng cục Tình báo quốc phòng (TC2) là lực lượng trực tiếp thực hiện công tác tình báo chiến lược và chỉ đạo nghiệp vụ tình báo, trinh sát toàn quân."
+      },
+      {
+        id: 11,
+        question: "Theo Thông tư số 83/2025/TT-BQP khi tổ chức chính quyền địa phương 02 cấp, cơ quan nào ở địa phương sẽ không tiếp tục tổ chức mà chuyển sang xây dựng Ban chỉ huy Phòng thủ khu vực?",
+        options: [
+          "A. Ban chỉ huy quân sự cấp Tỉnh",
+          "B. Ban chỉ huy quân sự cấp Huyện (quận, thị xã)",
+          "C. Ban chỉ huy quân sự cấp Xã (phường)",
+          "D. Ban chỉ huy quân sự cơ quan, doanh nghiệp"
+        ],
+        answer: "B",
+        explain: "Khi tổ chức chính quyền địa phương 2 cấp, quân đội không tiếp tục xây dựng BCHQS cấp Huyện mà tiến tới xây dựng Ban chỉ huy Phòng thủ khu vực."
+      },
+      {
+        id: 12,
+        question: "Hai đơn vị cấp Quân đoàn cơ động lớn nhất trực thuộc Lục quân Việt Nam hiện nay có phiên hiệu là gì?",
+        options: [
+          "A. Quân đoàn 1 và Quân đoàn 2",
+          "B. Quân đoàn 3 và Quân đoàn 4",
+          "C. Quân đoàn 12 và Quân đoàn 34",
+          "D. Quân đoàn 1 và Quân đoàn 4"
+        ],
+        answer: "C",
+        explain: "Lục quân Việt Nam được tổ chức lại thành 2 quân đoàn cơ động tinh, gọn, mạnh là Quân đoàn 12 và Quân đoàn 34."
+      },
+      {
+        id: 13,
+        question: "Lực lượng Bộ đội Biên phòng Việt Nam được thành lập vào ngày tháng năm nào?",
+        options: ["A. 03/03/1959", "B. 28/08/1998", "C. 15/08/2017", "D. 19/04/1958"],
+        answer: "A",
+        explain: "Ngày truyền thống của Bộ đội Biên phòng là ngày 03 tháng 3 năm 1959."
+      },
+      {
+        id: 14,
+        question: "Bộ Tư lệnh Cảnh sát biển Việt Nam được thành lập vào ngày tháng năm nào?",
+        options: ["A. 28/08/1998", "B. 07/05/1955", "C. 22/10/1963", "D. 15/08/2017"],
+        answer: "A",
+        explain: "Cảnh sát biển Việt Nam được thành lập ngày 28 tháng 8 năm 1998."
+      },
+      {
+        id: 15,
+        question: "Lực lượng tác chiến nòng cốt trong bảo vệ chủ quyền quốc gia trên không gian mạng của Quân đội nhân dân Việt Nam là đơn vị nào?",
+        options: [
+          "A. Bộ Tư lệnh Tác chiến không gian mạng",
+          "B. Trung tâm Thông tin Khoa học quân sự",
+          "C. Viện Công nghệ thông tin quân sự",
+          "D. Cục Bản đồ Bộ Tổng Tham mưu"
+        ],
+        answer: "A",
+        explain: "Bộ Tư lệnh Tác chiến không gian mạng (thành lập 15/8/2017) là lực lượng chuyên trách nòng cốt bảo vệ chủ quyền trên không gian mạng."
+      },
+      {
+        id: 16,
+        question: "Ngày truyền thống của Quân chủng Hải quân nhân dân Việt Nam là ngày nào?",
+        options: ["A. 26/04/1955", "B. 07/05/1955", "C. 05/08/1964", "D. 22/10/1963"],
+        answer: "B",
+        explain: "Ngày 07/5/1955 là ngày thành lập Cục Phòng thủ bờ biển, được lấy làm ngày truyền thống của Quân chủng Hải quân."
+      },
+      {
+        id: 17,
+        question: "Ai là người được giao trọng trách phụ trách Cục Phòng thủ bờ biển đầu tiên khi mới thành lập ngày 07/5/1955?",
+        options: [
+          "A. Đồng chí Võ Nguyên Giáp",
+          "B. Đồng chí Nguyễn Bá Phát",
+          "C. Đồng chí Hoàng Văn Thái",
+          "D. Đồng chí Đào Huy Vũ"
+        ],
+        answer: "B",
+        explain: "Đồng chí Nguyễn Bá Phát được cử phụ trách Cục Phòng thủ bờ biển khi thành lập."
+      },
+      {
+        id: 18,
+        question: "Quân chủng Hải quân nhân dân Việt Nam hiện nay được tổ chức biên chế thành bao nhiêu Vùng Hải quân?",
+        options: ["A. 3 Vùng", "B. 4 Vùng", "C. 5 Vùng", "D. 7 Vùng"],
+        answer: "C",
+        explain: "Quân chủng Hải quân được tổ chức thành 5 Vùng Hải quân (Bộ Tư lệnh Vùng 1, 2, 3, 4, 5)."
+      },
+      {
+        id: 19,
+        question: "Quân chủng Hải quân Việt Nam gồm có các binh chủng hợp thành nào?",
+        options: [
+          "A. Tàu mặt nước, Tàu ngầm, Không quân Hải quân, Pháo binh - Tên lửa bờ, Hải quân đánh bộ, Đặc công Hải quân",
+          "B. Tàu tuần tiễu, Tàu đổ bộ, Công binh cảng, Pháo cao xạ bờ biển",
+          "C. Tàu săn ngầm, Thủy phi cơ, Biệt động biển, Rađa cảnh giới",
+          "D. Tàu vận tải biển, Tàu cứu nạn, Phòng không bờ biển, Hóa học"
+        ],
+        answer: "A",
+        explain: "Quân chủng Hải quân gồm 5 binh chủng chuyên ngành: Tàu mặt nước, Tàu ngầm; Không quân Hải quân; Pháo binh - Tên lửa bờ; Hải quân đánh bộ; Đặc công Hải quân."
+      },
+      {
+        id: 20,
+        question: "Dòng tàu ngầm điện - diesel hiện đại đang được trang bị cho Binh chủng Tàu ngầm thuộc Hải quân Việt Nam là:",
+        options: ["A. Tàu ngầm Lada", "B. Tàu ngầm Kilo 636", "C. Tàu ngầm Typhoon", "D. Tàu ngầm Scorpène"],
+        answer: "B",
+        explain: "Việt Nam sở hữu biên đội 6 tàu ngầm hiện đại Kilo 636 do Liên bang Nga đóng."
+      },
+      {
+        id: 21,
+        question: "Tàu hộ vệ tên lửa tàng hình hiện đại bậc nhất trong biên chế Quân chủng Hải quân Việt Nam hiện nay mang tên là:",
+        options: ["A. Gepard 3.9", "B. Sovremenny", "C. Molniya", "D. TT-400TP"],
+        answer: "A",
+        explain: "Tàu hộ vệ tên lửa GEPARD 3.9 là chiến hạm mặt nước uy lực hàng đầu của Hải quân Việt Nam."
+      },
+      {
+        id: 22,
+        question: "Quân chủng Phòng không - Không quân được thành lập vào ngày tháng năm nào?",
+        options: ["A. 22/10/1963", "B. 16/05/1977", "C. 03/03/1999", "D. 28/05/1956"],
+        answer: "A",
+        explain: "Ngày 22/10/1963, Quân chủng Phòng không - Không quân được thành lập trên cơ sở sáp nhập Bộ Tư lệnh Phòng không và Cục Không quân."
+      },
+      {
+        id: 23,
+        question: "Trong lịch sử, giai đoạn nào Quân chủng Phòng không - Không quân từng được tách ra thành hai quân chủng riêng biệt?",
+        options: ["A. 1954 - 1963", "B. 1977 - 1999", "C. 1965 - 1975", "D. 1999 - 2010"],
+        answer: "B",
+        explain: "Từ 16/5/1977 đến 3/3/1999, lực lượng này tách thành 2 quân chủng riêng: Quân chủng Phòng không và Quân chủng Không quân trước khi tái hợp nhất."
+      },
+      {
+        id: 24,
+        question: "Loại máy bay tiêm kích đa năng hiện đại giữ vai trò chủ lực trong tác chiến đường không của Không quân Việt Nam hiện nay là:",
+        options: ["A. MiG-21", "B. Su-30MK2", "C. MiG-17", "D. Su-22M4"],
+        answer: "B",
+        explain: "Tiêm kích đa năng Su-30MK2 là dòng máy bay chiến đấu hiện đại chủ lực của Không quân Việt Nam."
+      },
+      {
+        id: 25,
+        question: "Tổ hợp tên lửa phòng không tầm xa có độ chính xác cao được trang bị cho Quân chủng PK-KQ là:",
+        options: ["A. S-75 Volga", "B. S-125 Pechora", "C. S-300PMU1", "D. Crotale"],
+        answer: "C",
+        explain: "Quân chủng PK-KQ được trang bị tổ hợp tên lửa phòng không tầm xa hiện đại S-300PMU1."
+      },
+      {
+        id: 26,
+        question: "Ngày truyền thống của Binh chủng Pháo binh (nay là Pháo binh - Tên lửa) là ngày nào?",
+        options: ["A. 29/06/1946", "B. 05/10/1959", "C. 19/03/1967", "D. 25/03/1946"],
+        answer: "A",
+        explain: "Ngày 29/6/1946, đồng chí Hoàng Văn Thái đọc quyết định thành lập Đoàn pháo binh Thủ đô, đánh dấu ngày ra đời của Binh chủng Pháo binh."
+      },
+      {
+        id: 27,
+        question: "Ba khẩu đội/trung đội pháo đài lịch sử của Đoàn pháo binh Thủ đô năm 1946 gồm:",
+        options: [
+          "A. Pháo đài Láng, Pháo đài Xuân Canh, Pháo đài Xuân Tảo",
+          "B. Pháo đài Đống Đa, Pháo đài Láng, Pháo đài Cổ Loa",
+          "C. Pháo đài Ba Đình, Pháo đài Thăng Long, Pháo đài Hoàn Kiếm",
+          "D. Pháo đài Bạch Mai, Pháo đài Gia Lâm, Pháo đài Láng"
+        ],
+        answer: "A",
+        explain: "Đoàn pháo binh Thủ đô gồm 3 trung đội: Pháo đài Láng, Pháo đài Xuân Canh, Pháo đài Xuân Tảo."
+      },
+      {
+        id: 28,
+        question: "Tám chữ vàng truyền thống mà Chủ tịch Hồ Chí Minh khen tặng cho Binh chủng Pháo binh vào ngày 13/4/1967 là:",
+        options: [
+          "A. \"Chân đồng, vai sắt, đánh giỏi, bắn trúng\"",
+          "B. \"Đã ra quân là đánh thắng, đánh giỏi, bắn trúng\"",
+          "C. \"Mở đường thắng lợi, dũng cảm kiên cường\"",
+          "D. \"Bách phát bách trúng, trung dũng kiên cường\""
+        ],
+        answer: "A",
+        explain: "Bác Hồ tặng Pháo binh 8 chữ: \"Chân đồng, vai sắt, đánh giỏi, bắn trúng\"."
+      },
+      {
+        id: 29,
+        question: "Bộ Tư lệnh Pháo binh - Tên lửa chính thức được công bố quyết định thành lập vào thời gian nào?",
+        options: ["A. Chiều 20/08/2025", "B. 22/12/2024", "C. 07/08/2025", "D. 19/04/2025"],
+        answer: "A",
+        explain: "Chiều ngày 20/8/2025, Đại tướng Nguyễn Tân Cương chủ trì Lễ công bố quyết định thành lập Bộ Tư lệnh Pháo binh - Tên lửa."
+      },
+      {
+        id: 30,
+        question: "Đơn vị tên lửa đất đối đất trực thuộc biên chế Binh chủng Pháo binh - Tên lửa mang phiên hiệu gì?",
+        options: ["A. Lữ đoàn 490", "B. Lữ đoàn 204", "C. Lữ đoàn 45", "D. Lữ đoàn 675"],
+        answer: "A",
+        explain: "Binh chủng Pháo binh - Tên lửa trực tiếp quản lý Lữ đoàn tên lửa chiến dịch 490."
+      },
+      {
+        id: 31,
+        question: "Ngày truyền thống của Binh chủng Tăng thiết giáp là ngày tháng năm nào?",
+        options: ["A. 05/10/1959", "B. 02/09/1959", "C. 19/04/1958", "D. 28/06/1965"],
+        answer: "A",
+        explain: "Ngày 05/10/1959 Bộ Quốc phòng ký quyết định thành lập Trung đoàn xe tăng 202 - trung đoàn tăng thiết giáp đầu tiên của Quân đội."
+      },
+      {
+        id: 32,
+        question: "Trung đoàn xe tăng đầu tiên của Quân đội nhân dân Việt Nam mang phiên hiệu và mật danh là gì?",
+        options: [
+          "A. Trung đoàn 201, mật danh H01",
+          "B. Trung đoàn 202, mật danh H02",
+          "C. Trung đoàn 215, mật danh T34",
+          "D. Trung đoàn 45, mật danh C202"
+        ],
+        answer: "B",
+        explain: "Trung đoàn xe tăng đầu tiên mang phiên hiệu Trung đoàn 202, mật danh H02."
+      },
+      {
+        id: 33,
+        question: "Trong đội hình chiến đấu binh chủng hợp thành, Binh chủng Tăng thiết giáp giữ vị trí tác chiến nào?",
+        options: [
+          "A. Hỏa lực chi viện tầm xa từ phía sau",
+          "B. Lực lượng đột kích quan trọng của Lục quân và Hải quân đánh bộ",
+          "C. Lực lượng chuyên trách mở đường khắc phục vật cản",
+          "D. Lực lượng luồn sâu tiêu hao hậu phương đối phương"
+        ],
+        answer: "B",
+        explain: "Tăng thiết giáp là lực lượng đột kích quan trọng của Lục quân và Hải quân đánh bộ với hỏa lực mạnh, sức cơ động cao và khả năng bảo vệ tốt."
+      },
+      {
+        id: 34,
+        question: "Các lữ đoàn xe tăng chiến đấu trực thuộc Binh chủng Tăng thiết giáp gồm có:",
+        options: [
+          "A. Lữ đoàn xe tăng 201 và Lữ đoàn xe tăng 215",
+          "B. Lữ đoàn 113 và Lữ đoàn 198",
+          "C. Lữ đoàn 229 và Lữ đoàn 239",
+          "D. Lữ đoàn 86 và Lữ đoàn 87"
+        ],
+        answer: "A",
+        explain: "Binh chủng Tăng thiết giáp trực tiếp quản lý các lữ đoàn xe tăng 201 và 215."
+      },
+      {
+        id: 35,
+        question: "Ngày truyền thống của Binh chủng Đặc công là ngày tháng năm nào?",
+        options: ["A. 19/03/1967", "B. 25/03/1946", "C. 05/10/1959", "D. 19/04/1958"],
+        answer: "A",
+        explain: "Binh chủng Đặc công được thành lập ngày 19 tháng 3 năm 1967."
+      },
+      {
+        id: 36,
+        question: "Lực lượng Đặc công của Quân đội nhân dân Việt Nam được tổ chức thành những thành phần nào?",
+        options: [
+          "A. Đặc công nhảy dù, Đặc công đổ bộ, Đặc công trinh sát",
+          "B. Đặc công bộ, Đặc công nước, Đặc công biệt động",
+          "C. Đặc công hỏa lực, Đặc công cơ giới, Đặc công viễn thám",
+          "D. Đặc công phòng không, Đặc công biên giới, Đặc công đường biển"
+        ],
+        answer: "B",
+        explain: "Binh chủng Đặc công gồm ba lực lượng chuyên biệt: Đặc công bộ, Đặc công nước và Đặc công biệt động."
+      },
+      {
+        id: 37,
+        question: "Lữ đoàn Đặc công nào sau đây trực thuộc Bộ Tư lệnh Binh chủng Đặc công?",
+        options: ["A. Lữ đoàn Đặc công 113", "B. Lữ đoàn 205", "C. Lữ đoàn 229", "D. Lữ đoàn 490"],
+        answer: "A",
+        explain: "Các lữ đoàn đặc công trực thuộc Binh chủng gồm: Lữ đoàn 1, 5, 113, 198, 429."
+      },
+      {
+        id: 38,
+        question: "Sắc lệnh số 34-SL thành lập Công chính Giao thông Cục (tiền thân Binh chủng Công binh) do Chủ tịch Hồ Chí Minh ký vào ngày nào?",
+        options: ["A. 25/03/1946", "B. 02/12/1946", "C. 05/02/1949", "D. 01/01/1951"],
+        answer: "A",
+        explain: "Ngày 25/3/1946 Bác Hồ ký Sắc lệnh số 34-SL thành lập Công chính Giao thông Cục, lấy làm ngày truyền thống Binh chủng Công binh."
+      },
+      {
+        id: 39,
+        question: "Lá cờ truyền thống mang dòng chữ gì được Chủ tịch Hồ Chí Minh trao tặng cho Binh chủng Công binh vào năm 1952?",
+        options: [
+          "A. \"Đánh chắc thắng\"",
+          "B. \"Mở đường thắng lợi\"",
+          "C. \"Chân đồng vai sắt\"",
+          "D. \"Kịp thời, chính xác, bí mật, an toàn\""
+        ],
+        answer: "B",
+        explain: "Năm 1952, Binh chủng Công binh vinh dự được Bác Hồ trao tặng cờ thêu 4 chữ \"Mở đường thắng lợi\"."
+      },
+      {
+        id: 40,
+        question: "Binh chủng Công binh là binh chủng giữ vị trí nào trong Quân đội nhân dân Việt Nam?",
+        options: [
+          "A. Binh chủng hỏa lực độc lập tầm xa",
+          "B. Binh chủng bảo đảm chiến đấu và chuyên môn, có thể trực tiếp chiến đấu",
+          "C. Lực lượng phòng ngự thụ động tại hậu cứ",
+          "D. Binh chủng tác chiến kỹ thuật số"
+        ],
+        answer: "B",
+        explain: "Công binh là binh chủng bảo đảm chiến đấu trong tiến công và phòng ngự, là binh chủng chuyên môn và có thể trực tiếp chiến đấu."
+      },
+      {
+        id: 41,
+        question: "Ngày truyền thống của Binh chủng Hóa học là ngày tháng năm nào?",
+        options: ["A. 19/04/1958", "B. 13/03/1958", "C. 09/05/1966", "D. 17/07/1976"],
+        answer: "A",
+        explain: "Ngày 19/4/1958 Tiểu đoàn hóa học 6 (sau là D901) được thành lập, đánh dấu ngày truyền thống Binh chủng Hóa học."
+      },
+      {
+        id: 42,
+        question: "Binh chủng Hóa học có thể trực tiếp tham gia chiến đấu tiêu diệt địch bằng những loại vũ khí nào?",
+        options: [
+          "A. Vũ khí hạt nhân chiến thuật",
+          "B. Vũ khí bộ binh và súng phun lửa",
+          "C. Súng cối hạng nặng và pháo tự hành",
+          "D. Tên lửa chống tăng tầm xa"
+        ],
+        answer: "B",
+        explain: "Lực lượng hóa học có thể trực tiếp chiến đấu bằng vũ khí bộ binh và súng phun lửa."
+      },
+      {
+        id: 43,
+        question: "Các Lữ đoàn phòng hóa trực thuộc Binh chủng Hóa học có phiên hiệu là:",
+        options: [
+          "A. Lữ đoàn 86 và Lữ đoàn 87",
+          "B. Lữ đoàn 201 và Lữ đoàn 215",
+          "C. Lữ đoàn 132 và Lữ đoàn 134",
+          "D. Lữ đoàn 229 và Lữ đoàn 239"
+        ],
+        answer: "A",
+        explain: "Binh chủng Hóa học quản lý các đơn vị chiến đấu trực thuộc gồm Lữ đoàn phòng hóa 86 và Lữ đoàn 87."
+      },
+      {
+        id: 44,
+        question: "Ngày truyền thống của Binh chủng Thông tin liên lạc là ngày tháng năm nào?",
+        options: ["A. 07/09/1945", "B. 09/09/1945", "C. 31/07/1949", "D. 31/01/1968"],
+        answer: "B",
+        explain: "Binh chủng Thông tin liên lạc lấy ngày 09 tháng 9 năm 1945 làm ngày truyền thống của Binh chủng."
+      },
+      {
+        id: 45,
+        question: "Ai được giao nhiệm vụ làm Trưởng phòng đầu tiên của Phòng Thông tin Liên lạc quân sự khi mới thành lập năm 1945?",
+        options: [
+          "A. Đồng chí Hoàng Đạo Thúy",
+          "B. Đồng chí Hoàng Văn Thái",
+          "C. Đồng chí Đào Huy Vũ",
+          "D. Đồng chí Nguyễn Bá Phát"
+        ],
+        answer: "A",
+        explain: "Ngày 7/9/1945 Phòng Thông tin Liên lạc quân sự được thành lập do đồng chí Hoàng Đạo Thúy làm Trưởng phòng."
+      },
+      {
+        id: 46,
+        question: "Trong hiệp đồng tác chiến quân binh chủng, hoạt động tác chiến của lực lượng nào được lấy làm trung tâm?",
+        options: [
+          "A. Lực lượng Phòng không - Không quân",
+          "B. Lực lượng Pháo binh chi viện",
+          "C. Hành động của binh chủng hợp thành",
+          "D. Lực lượng đổ bộ đặc nhiệm"
+        ],
+        answer: "C",
+        explain: "Tác chiến hiệp đồng quân chủng, binh chủng lấy hành động binh chủng hợp thành làm trung tâm, tập trung vào khu vực tác chiến chủ yếu và trận then chốt."
+      },
+      {
+        id: 47,
+        question: "Công tác tổ chức hiệp đồng tác chiến thường được người chỉ huy tiến hành vào thời điểm nào?",
+        options: [
+          "A. Khi các đơn vị đã nổ súng tiếp cận mục tiêu",
+          "B. Sau khi người chỉ huy chính thức giao nhiệm vụ cho cấp dưới (hoặc thông qua quyết tâm)",
+          "C. Sau khi kết thúc hoàn toàn chiến dịch",
+          "D. Khi cơ động hành quân qua trạm xuất phát"
+        ],
+        answer: "B",
+        explain: "Tổ chức hiệp đồng tiến hành sau khi người chỉ huy chính thức giao nhiệm vụ cho cấp dưới hoặc sau khi thông qua quyết tâm của cấp dưới."
+      },
+      {
+        id: 48,
+        question: "Phương tiện và môi trường nào thường được người chỉ huy sử dụng để tổ chức hiệp đồng tác chiến?",
+        options: [
+          "A. Trên sa bàn, bản đồ hoặc ngoài thực địa",
+          "B. Chỉ truyền đạt qua điện thoại vô tuyến mật mã",
+          "C. Duy nhất tại văn phòng cơ quan tham mưu qua giấy tờ",
+          "D. Trên bảng sơ đồ tác chiến mô phỏng kỹ thuật số dân sự"
+        ],
+        answer: "A",
+        explain: "Tổ chức hiệp đồng được tiến hành trên sa bàn, bản đồ hoặc ngoài thực địa."
+      },
+      {
+        id: 49,
+        question: "Khi đang duy trì hiệp đồng tác chiến mà hiệp đồng bị gián đoạn, cơ quan tham mưu cần xử trí như thế nào?",
+        options: [
+          "A. Nhanh chóng tìm nguyên nhân, kiến nghị biện pháp khắc phục với người chỉ huy",
+          "B. Báo cáo cấp trên xin lệnh rút toàn bộ lực lượng về cứ điểm",
+          "C. Để các đơn vị tự ý xử lý tình huống theo nhận định cá nhân",
+          "D. Chờ đến khi hết giờ tác chiến mới xử lý"
+        ],
+        answer: "A",
+        explain: "Khi hiệp đồng bị gián đoạn, cơ quan tham mưu phải nhanh chóng tìm rõ nguyên nhân và kiến nghị biện pháp xử lý kịp thời với người chỉ huy."
+      },
+      {
+        id: 50,
+        question: "Cơ quan nào chịu trách nhiệm chủ trì tổ chức hiệp đồng tác chiến giữa bộ đội binh chủng hợp thành với lực lượng không quân, hải quân chi viện?",
+        options: [
+          "A. Cơ quan tham mưu đơn vị không quân chi viện",
+          "B. Cơ quan tham mưu đơn vị hải quân chi viện",
+          "C. Cơ quan tham mưu binh chủng hợp thành",
+          "D. Ban chỉ huy quân sự khu vực tác chiến"
+        ],
+        answer: "C",
+        explain: "Cơ quan tham mưu binh chủng hợp thành chủ trì hiệp đồng tác chiến với lực lượng không quân và hải quân chi viện."
+      }
+    ];
+
+    /* ==========================================================
+       3. TRẠNG THÁI ỨNG DỤNG (STATE MANAGEMENT)
+       ========================================================== */
+    let currentStudentName = "";
+    let activeQuestions = []; // 20 câu được random
+    let userAnswers = {};     // { questionIndex: 'A' | 'B' | 'C' | 'D' }
+    let isQuizActive = false;
+    let isSubmitted = false;
+    let tabViolations = 0;
+    let startTime = null;
+
+    /* ==========================================================
+       4. HÀM XÁO TRỘN VÀ CHỌN 20 CÂU TỪ 50 CÂU
+       ========================================================== */
+    function getRandom20Questions() {
+      const shuffled = [...QUESTION_BANK].sort(() => 0.5 - Math.random());
+      return shuffled.slice(0, 20);
+    }
+
+    /* ==========================================================
+       5. CHUYỂN MÀN HÌNH VÀ BẮT ĐẦU LÀM BÀI
+       ========================================================== */
+    const viewLogin = document.getElementById('view-login');
+    const viewQuiz = document.getElementById('view-quiz');
+    const viewResult = document.getElementById('view-result');
+    const studentNameInput = document.getElementById('studentNameInput');
+    const btnStart = document.getElementById('btnStart');
+
+    btnStart.addEventListener('click', startQuiz);
+    studentNameInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') startQuiz();
+    });
+
+    function startQuiz() {
+      const name = studentNameInput.value.trim();
+      if (!name) {
+        alert("Vui lòng nhập họ và tên của bạn trước khi làm bài!");
+        studentNameInput.focus();
+        return;
+      }
+
+      currentStudentName = name;
+      tabViolations = 0;
+      isSubmitted = false;
+      userAnswers = {};
+      startTime = new Date();
+
+      // Rút ngẫu nhiên 20 câu hỏi
+      activeQuestions = getRandom20Questions();
+
+      // Cập nhật giao diện HUD
+      document.getElementById('hudName').textContent = currentStudentName;
+      updateHud();
+
+      // Render danh sách câu hỏi
+      renderQuestions();
+
+      // Chuyển view
+      viewLogin.style.display = 'none';
+      viewResult.style.display = 'none';
+      viewQuiz.style.display = 'block';
+
+      isQuizActive = true;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    /* ==========================================================
+       6. RENDER 20 CÂU HỎI
+       ========================================================== */
+    const questionContainer = document.getElementById('questionContainer');
+
+    function renderQuestions() {
+      questionContainer.innerHTML = '';
+
+      activeQuestions.forEach((q, idx) => {
+        const card = document.createElement('div');
+        card.className = 'question-card glass-card';
+        card.id = `q-card-${idx}`;
+
+        const letterKeys = ['A', 'B', 'C', 'D'];
+        let optionsHtml = '';
+
+        q.options.forEach((optText, optIdx) => {
+          const letter = letterKeys[optIdx];
+          optionsHtml += `
+            <label class="option-item" id="opt-label-${idx}-${letter}">
+              <input 
+                type="radio" 
+                name="question_${idx}" 
+                value="${letter}" 
+                onchange="handleSelectOption(${idx}, '${letter}')"
+              />
+              <span>${escapeHtml(optText)}</span>
+            </label>
+          `;
+        });
+
+        card.innerHTML = `
+          <div class="q-meta">
+            <span class="q-number">Câu hỏi ${idx + 1} / 20</span>
+          </div>
+          <div class="q-title">${escapeHtml(q.question)}</div>
+          <div class="options-grid">
+            ${optionsHtml}
+          </div>
+        `;
+
+        questionContainer.appendChild(card);
+      });
+    }
+
+    // Xử lý khi thí sinh chọn đáp án
+    window.handleSelectOption = function(qIndex, letter) {
+      userAnswers[qIndex] = letter;
+
+      // Update styling
+      const options = ['A', 'B', 'C', 'D'];
+      options.forEach(l => {
+        const labelEl = document.getElementById(`opt-label-${qIndex}-${l}`);
+        if (labelEl) {
+          if (l === letter) {
+            labelEl.classList.add('selected');
+          } else {
+            labelEl.classList.remove('selected');
+          }
+        }
+      });
+
+      updateHud();
+    };
+
+    function updateHud() {
+      const answeredCount = Object.keys(userAnswers).length;
+      document.getElementById('hudProgress').textContent = `Đã làm: ${answeredCount}/20`;
+      
+      const violationEl = document.getElementById('hudViolations');
+      violationEl.textContent = `Vi phạm tab: ${tabViolations}/2`;
+      if (tabViolations > 0) {
+        violationEl.style.color = '#F87171';
+      }
+    }
+
+    /* ==========================================================
+       7. CƠ CHẾ CHỐNG THOÁT TAB (TAB SWITCH DETECTION)
+       - Lần 1: Cảnh báo modal
+       - Lần 2: Tự động nộp bài ngay lập tức
+       ========================================================== */
+    const modalTabWarning = document.getElementById('modalTabWarning');
+    const modalAutoSubmit = document.getElementById('modalAutoSubmit');
+    const btnDismissWarning = document.getElementById('btnDismissWarning');
+
+    btnDismissWarning.addEventListener('click', () => {
+      modalTabWarning.classList.remove('active');
+    });
+
+    document.addEventListener('visibilitychange', () => {
+      if (!isQuizActive || isSubmitted) return;
+
+      if (document.hidden) {
+        // Người dùng đã rời khỏi tab hiện tại
+        tabViolations++;
+        updateHud();
+
+        if (tabViolations === 1) {
+          // Bật cờ cảnh báo lần 1
+          modalTabWarning.classList.add('active');
+        } else if (tabViolations >= 2) {
+          // Thoát tab lần 2 -> Tự động nộp bài
+          modalTabWarning.classList.remove('active');
+          modalAutoSubmit.classList.add('active');
+
+          setTimeout(() => {
+            modalAutoSubmit.classList.remove('active');
+            submitQuiz('tab_violation_limit');
+          }, 1800);
+        }
+      }
+    });
+
+    /* ==========================================================
+       8. NỘP BÀI VÀ GỬI TÍN HIỆU LÊN CLOUDFLARE WORKER
+       ========================================================== */
+    const btnSubmitQuiz = document.getElementById('btnSubmitQuiz');
+    btnSubmitQuiz.addEventListener('click', () => {
+      const answeredCount = Object.keys(userAnswers).length;
+      if (answeredCount < 20) {
+        const confirmSubmit = confirm(`Bạn mới trả lời ${answeredCount}/20 câu. Bạn có chắc chắn muốn nộp bài sớm không?`);
+        if (!confirmSubmit) return;
+      }
+      submitQuiz('manual_submit');
+    });
+
+    async function submitQuiz(reason = 'manual_submit') {
+      if (isSubmitted) return;
+      isSubmitted = true;
+      isQuizActive = false;
+
+      const finishTime = new Date();
+      const timeSpentSeconds = Math.round((finishTime - startTime) / 1000);
+
+      // Chấm điểm ở Front-end
+      let correctCount = 0;
+      const detailedResults = activeQuestions.map((q, idx) => {
+        const userChoice = userAnswers[idx] || null;
+        const isCorrect = userChoice === q.answer;
+        if (isCorrect) correctCount++;
+
+        return {
+          questionId: q.id,
+          question: q.question,
+          options: q.options,
+          userChoice: userChoice,
+          correctAnswer: q.answer,
+          isCorrect: isCorrect,
+          explain: q.explain
+        };
+      });
+
+      // Điểm số theo thang 10
+      const score10 = ((correctCount / 20) * 10).toFixed(1);
+
+      // 1 LẦN REQUEST DUY NHẤT LÊN CLOUDFLARE WORKER
+      const payload = {
+        studentName: currentStudentName,
+        score: parseFloat(score10),
+        correctCount: correctCount,
+        totalQuestions: 20,
+        violations: tabViolations,
+        reason: reason,
+        timeSpentSeconds: timeSpentSeconds,
+        timestamp: finishTime.toISOString()
+      };
+
+      try {
+        fetch(WORKER_ENDPOINT, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+          keepalive: true // Đảm bảo request vẫn được gửi nếu tab tắt
+        }).catch(err => {
+          console.warn("Worker fetch log (Chế độ local hoặc offline):", err);
+        });
+      } catch (e) {
+        console.warn("Lỗi khi gửi Worker:", e);
+      }
+
+      // Hiển thị kết quả lên giao diện
+      displayResults(score10, correctCount, detailedResults, reason);
+    }
+
+    /* ==========================================================
+       9. HIỂN THỊ KẾT QUẢ VÀ GIẢI THÍCH CHI TIẾT
+       ========================================================== */
+    function displayResults(score10, correctCount, detailedResults, reason) {
+      viewQuiz.style.display = 'none';
+      viewResult.style.display = 'block';
+
+      document.getElementById('resultScore').textContent = score10;
+      document.getElementById('resultStudentMeta').textContent = `Thí sinh: ${currentStudentName} • Thời gian nộp: ${new Date().toLocaleTimeString('vi-VN')}`;
+      document.getElementById('resultCorrectCount').textContent = `${correctCount}/20`;
+      document.getElementById('resultAccuracy').textContent = `${Math.round((correctCount / 20) * 100)}%`;
+      document.getElementById('resultViolations').textContent = `${tabViolations} lần`;
+
+      const statusEl = document.getElementById('resultStatusText');
+      if (reason === 'tab_violation_limit') {
+        statusEl.textContent = "Bị ép nộp do vi phạm tab";
+        statusEl.style.color = "var(--danger)";
+      } else {
+        statusEl.textContent = "Nộp bài thành công";
+        statusEl.style.color = "var(--success)";
+      }
+
+      // Render danh sách câu hỏi kèm đáp án đúng & giải thích
+      const reviewContainer = document.getElementById('reviewContainer');
+      reviewContainer.innerHTML = '';
+
+      detailedResults.forEach((item, idx) => {
+        const card = document.createElement('div');
+        card.className = 'question-card glass-card';
+
+        const statusBadge = item.isCorrect 
+          ? `<span class="review-status-badge badge-correct">✓ Trả lời đúng</span>`
+          : `<span class="review-status-badge badge-wrong">✗ Trả lời sai ${!item.userChoice ? '(Bỏ trống)' : ''}</span>`;
+
+        const letterKeys = ['A', 'B', 'C', 'D'];
+        let optionsHtml = '';
+
+        item.options.forEach((optText, optIdx) => {
+          const letter = letterKeys[optIdx];
+          let extraClass = '';
+
+          if (letter === item.correctAnswer) {
+            extraClass = 'state-correct';
+          } else if (letter === item.userChoice && !item.isCorrect) {
+            extraClass = 'state-user-wrong';
+          }
+
+          optionsHtml += `
+            <div class="option-item ${extraClass}" style="cursor: default;">
+              <span style="font-weight: 700;">${letter}.</span>
+              <span>${escapeHtml(optText.replace(/^[A-D]\.\s*/, ''))}</span>
+              ${letter === item.correctAnswer ? '<span style="margin-left: auto; font-size: 0.8rem; font-weight: 800;">[ĐÁP ÁN ĐÚNG]</span>' : ''}
+              ${(letter === item.userChoice && !item.isCorrect) ? '<span style="margin-left: auto; font-size: 0.8rem; font-weight: 800;">[BẠN CHỌN]</span>' : ''}
+            </div>
+          `;
+        });
+
+        card.innerHTML = `
+          <div class="q-meta">
+            <span class="q-number">Câu hỏi ${idx + 1} / 20</span>
+            ${statusBadge}
+          </div>
+          <div class="q-title">${escapeHtml(item.question)}</div>
+          <div class="options-grid">
+            ${optionsHtml}
+          </div>
+          <div class="explanation-box">
+            <strong>💡 Giải thích chi tiết:</strong> ${escapeHtml(item.explain)}
+          </div>
+        `;
+
+        reviewContainer.appendChild(card);
+      });
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Làm lại bài mới
+    document.getElementById('btnRestart').addEventListener('click', () => {
+      viewResult.style.display = 'none';
+      viewLogin.style.display = 'block';
+      studentNameInput.value = currentStudentName;
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // Helper bảo mật chống XSS
+    function escapeHtml(str) {
+      if (!str) return '';
+      return str
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+  </script>
+</body>
+</html>
