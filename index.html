@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hệ Thống Trắc Nghiệm Quốc Phòng - Quân Đội Nhân Dân Việt Nam</title>
+  <title>Hệ Thống Trắc Nghiệm & Bảng Xếp Hạng - QĐND Việt Nam</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -29,6 +29,9 @@
       --success: #10B981;
       --danger: #EF4444;
       --warning: #F59E0B;
+      --gold: #F59E0B;
+      --silver: #94A3B8;
+      --bronze: #D97706;
     }
 
     * {
@@ -163,6 +166,7 @@
       background: rgba(255, 255, 255, 0.12);
     }
 
+    /* SCREEN 1: LOGIN */
     #view-login {
       padding: 40px 28px;
       text-align: center;
@@ -223,10 +227,10 @@
       color: #FFA366;
     }
 
+    /* SCREEN 2: QUIZ */
     #view-quiz {
       display: none;
     }
-
     .hud-bar {
       position: sticky;
       top: 14px;
@@ -355,6 +359,7 @@
       text-align: center;
     }
 
+    /* SCREEN 3: RESULT & RANK */
     #view-result {
       display: none;
     }
@@ -390,7 +395,7 @@
     .result-stats-row {
       display: flex;
       justify-content: center;
-      gap: 20px;
+      gap: 16px;
       flex-wrap: wrap;
       margin: 18px 0 10px;
     }
@@ -405,6 +410,77 @@
       color: #FFFFFF;
     }
 
+    /* LEADERBOARD COMPONENT */
+    .leaderboard-section {
+      margin-bottom: 30px;
+      padding: 24px;
+    }
+    .leaderboard-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 18px;
+      border-bottom: 1px solid var(--glass-border);
+      padding-bottom: 14px;
+    }
+    .leaderboard-header h3 {
+      font-size: 1.25rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: #FFFFFF;
+    }
+    .leaderboard-table-wrapper {
+      overflow-x: auto;
+    }
+    .leaderboard-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.92rem;
+    }
+    .leaderboard-table th {
+      padding: 12px 14px;
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .leaderboard-table td {
+      padding: 14px 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      color: #E2E8F0;
+    }
+    .leaderboard-row {
+      transition: background 0.2s ease;
+    }
+    .leaderboard-row:hover {
+      background: rgba(255, 255, 255, 0.04);
+    }
+    .leaderboard-row.my-row {
+      background: rgba(255, 102, 0, 0.15) !important;
+      border-left: 3px solid var(--orange-primary);
+      font-weight: 700;
+    }
+    .rank-num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      font-weight: 800;
+      font-size: 0.85rem;
+    }
+    .rank-1 { background: rgba(245, 158, 11, 0.2); color: #FBBF24; border: 1px solid #F59E0B; }
+    .rank-2 { background: rgba(148, 163, 184, 0.2); color: #CBD5E1; border: 1px solid #94A3B8; }
+    .rank-3 { background: rgba(217, 119, 6, 0.2); color: #F59E0B; border: 1px solid #D97706; }
+    .rank-other { color: var(--text-muted); }
+
+    /* REVIEW QUESTION CARDS */
     .review-status-badge {
       display: inline-flex;
       align-items: center;
@@ -452,6 +528,7 @@
       color: #FFA366;
     }
 
+    /* MODAL POPUPS */
     .modal-overlay {
       position: fixed;
       inset: 0;
@@ -529,6 +606,10 @@
         font-size: 0.88rem;
         padding: 12px 14px;
       }
+      .leaderboard-table th, .leaderboard-table td {
+        padding: 10px 8px;
+        font-size: 0.82rem;
+      }
     }
   </style>
 </head>
@@ -541,14 +622,14 @@
     <header class="quiz-header">
       <div class="badge-pill">QĐND Việt Nam • Kiểm Tra Kiến Thức</div>
       <h1>Hệ Thống Trắc Nghiệm Quân Sự</h1>
-      <p>Ngân hàng 50 câu • Trích xuất ngẫu nhiên 20 câu • Hệ thống kiểm soát bảo mật</p>
+      <p>Ngân hàng 50 câu • Đề ngẫu nhiên 20 câu • Bảng xếp hạng trực tuyến</p>
     </header>
 
     <!-- VIEW 1: ĐĂNG NHẬP -->
     <main id="view-login" class="glass-card">
       <div class="login-icon">🛡️</div>
       <h2 style="font-size: 1.4rem; font-weight: 800; margin-bottom: 6px;">Bắt Đầu Bài Kiểm Tra</h2>
-      <p style="color: var(--text-muted); font-size: 0.9rem;">Vui lòng nhập họ và tên của bạn để tạo phiên làm bài.</p>
+      <p style="color: var(--text-muted); font-size: 0.9rem;">Vui lòng nhập họ và tên để khởi tạo bài thi và đua top lớp.</p>
 
       <div class="input-group">
         <label for="studentNameInput">Họ và tên thí sinh:</label>
@@ -566,9 +647,9 @@
         <strong>⚠️ Quy chế phòng thi trực tuyến:</strong>
         <ul style="padding-left: 18px; margin-top: 6px; display: flex; flex-direction: column; gap: 4px;">
           <li>Hệ thống lấy <strong>20 câu hỏi ngẫu nhiên</strong> từ kho đề.</li>
-          <li><strong>Rời khỏi tab lần 1:</strong> Hệ thống hiện cảnh báo vi phạm.</li>
-          <li><strong>Rời khỏi tab lần 2:</strong> Hệ thống tự động khoá và nộp bài ngay lập tức.</li>
-          <li>Kết quả và giải thích chi tiết sẽ hiển thị ngay sau khi nộp bài.</li>
+          <li><strong>Rời khỏi tab lần 1:</strong> Hiện hộp thoại cảnh báo vi phạm.</li>
+          <li><strong>Rời khỏi tab lần 2:</strong> Tự động khoá bài và nộp lên hệ thống.</li>
+          <li>Nộp bài sẽ hiển thị ngay <strong>Bảng xếp hạng lớp</strong> và giải thích chi tiết.</li>
         </ul>
       </div>
 
@@ -599,8 +680,9 @@
       </div>
     </section>
 
-    <!-- VIEW 3: HIỂN THỊ KẾT QUẢ -->
+    <!-- VIEW 3: KẾT QUẢ & BẢNG XẾP HẠNG -->
     <section id="view-result">
+      <!-- Thẻ điểm số cá nhân -->
       <div class="result-summary glass-card">
         <div class="score-circle">
           <span class="score-big" id="resultScore">0</span>
@@ -612,17 +694,43 @@
         <div class="result-stats-row">
           <div class="stat-pill">Số câu đúng: <strong id="resultCorrectCount">0/20</strong></div>
           <div class="stat-pill">Tỷ lệ chính xác: <strong id="resultAccuracy">0%</strong></div>
-          <div class="stat-pill">Cảnh báo tab: <strong id="resultViolations">0</strong></div>
-          <div class="stat-pill">Trạng thái: <strong id="resultStatusText">Đã hoàn thành</strong></div>
+          <div class="stat-pill">Thời gian: <strong id="resultTimeSpent">0s</strong></div>
+          <div class="stat-pill">Thoát tab: <strong id="resultViolations">0 lần</strong></div>
         </div>
 
-        <div style="margin-top: 24px; display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
+        <div style="margin-top: 22px; display: flex; justify-content: center; gap: 12px; flex-wrap: wrap;">
           <button id="btnRestart" class="btn btn-outline">
-            🔄 Làm Đề Mới (20 câu khác)
+            🔄 Làm Lại Đề Mới (20 câu khác)
           </button>
         </div>
       </div>
 
+      <!-- BẢNG XẾP HẠNG LỚP HỌC (LEADERBOARD) -->
+      <div class="leaderboard-section glass-card">
+        <div class="leaderboard-header">
+          <h3>🏆 Bảng Xếp Hạng Lớp Học</h3>
+          <span style="font-size: 0.8rem; color: var(--text-muted);" id="leaderboardTotal">Đang tải xếp hạng...</span>
+        </div>
+        <div class="leaderboard-table-wrapper">
+          <table class="leaderboard-table">
+            <thead>
+              <tr>
+                <th style="width: 50px;">Hạng</th>
+                <th>Thí Sinh</th>
+                <th>Điểm</th>
+                <th>Số Câu</th>
+                <th>Thời Gian</th>
+                <th>Vi Phạm</th>
+              </tr>
+            </thead>
+            <tbody id="leaderboardBody">
+              <!-- Render tự động bởi JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- ĐÁP ÁN VÀ LỜI GIẢI CHI TIẾT -->
       <h3 style="font-size: 1.25rem; font-weight: 800; margin: 30px 0 16px; color: #FFFFFF;">
         Chi Tiết Bài Làm & Đáp Án Chuẩn Xác
       </h3>
@@ -636,8 +744,8 @@
       <div class="modal-icon">⚠️</div>
       <h3 class="modal-title" style="color: #F59E0B;">CẢNH BÁO VI PHẠM (LẦN 1)</h3>
       <p class="modal-msg">
-        Bạn vừa chuyển tab hoặc rời khỏi cửa sổ làm bài thi!<br><br>
-        <strong>Chú ý:</strong> Nếu bạn rời khỏi tab thêm <strong>1 lần nữa</strong>, hệ thống sẽ <strong>tự động thu bài ngay lập tức</strong> và ghi nhận kết quả hiện tại.
+        Bạn vừa chuyển tab hoặc rời khỏi màn hình làm bài!<br><br>
+        <strong>Lưu ý:</strong> Nếu bạn rời tab thêm <strong>1 lần nữa</strong>, hệ thống sẽ <strong>tự động thu bài ngay lập tức</strong>.
       </p>
       <button id="btnDismissWarning" class="btn btn-orange" style="width: 100%;">
         Tôi Đã Hiểu, Tiếp Tục Làm Bài
@@ -649,17 +757,17 @@
   <div id="modalAutoSubmit" class="modal-overlay">
     <div class="modal-dialog">
       <div class="modal-icon">🚫</div>
-      <h3 class="modal-title" style="color: #EF4444;">ĐÃ TỰ ĐỘNG NỘP BÀI</h3>
+      <h3 class="modal-title" style="color: #EF4444;">ĐÃ TỰ ĐỘNG THU BÀI</h3>
       <p class="modal-msg">
-        Bạn đã vi phạm quy chế thoát màn hình/đổi tab <strong>lần thứ 2</strong>.<br><br>
-        Hệ thống đang tiến hành chấm điểm và lưu kết quả bài thi...
+        Bạn đã vi phạm quy chế rời khỏi màn hình làm bài <strong>lần thứ 2</strong>.<br><br>
+        Hệ thống đang lưu điểm và xếp hạng bài thi...
       </p>
     </div>
   </div>
 
   <script>
     /* ==========================================================
-       1. CẤU HÌNH CLOUDFLARE WORKER ENDPOINT CHÍNH THỨC
+       1. CẤU HÌNH WORKER ENDPOINT
        ========================================================== */
     const WORKER_ENDPOINT = "https://quiz.vinhgiang782007.workers.dev";
 
@@ -968,7 +1076,7 @@
           "A. Hỏa lực chi viện tầm xa từ phía sau",
           "B. Lực lượng đột kích quan trọng của Lục quân và Hải quân đánh bộ",
           "C. Lực lượng chuyên trách mở đường khắc phục vật cản",
-          "D. Lực lượng luồn sâu tiêu hao hậu phương đối phương"
+          "D. Lực lượng luồn sâu tiêuahoa hậu phương đối phương"
         ],
         answer: "B",
         explain: "Tăng thiết giáp là lực lượng đột kích quan trọng của Lục quân và Hải quân đánh bộ với hỏa lực mạnh, sức cơ động cao và khả năng bảo vệ tốt."
@@ -1323,7 +1431,7 @@
     });
 
     /* ==========================================================
-       8. NỘP BÀI VÀ GỬI TÍN HIỆU LÊN CLOUDFLARE WORKER
+       8. NỘP BÀI & NHẬN BẢNG XẾP HẠNG (CHỈ 1 REQUEST)
        ========================================================== */
     const btnSubmitQuiz = document.getElementById('btnSubmitQuiz');
     btnSubmitQuiz.addEventListener('click', () => {
@@ -1343,6 +1451,7 @@
       const finishTime = new Date();
       const timeSpentSeconds = Math.round((finishTime - startTime) / 1000);
 
+      // Chấm điểm tại client
       let correctCount = 0;
       const detailedResults = activeQuestions.map((q, idx) => {
         const userChoice = userAnswers[idx] || null;
@@ -1362,7 +1471,7 @@
 
       const score10 = ((correctCount / 20) * 10).toFixed(1);
 
-      // GỬI 1 LẦN DUY NHẤT LÊN CLOUDFLARE WORKER
+      // Gói dữ liệu gửi lên Worker
       const payload = {
         studentName: currentStudentName,
         score: parseFloat(score10),
@@ -1374,44 +1483,58 @@
         timestamp: finishTime.toISOString()
       };
 
+      let leaderboardData = [];
+
       try {
-        fetch(WORKER_ENDPOINT, {
+        const res = await fetch(WORKER_ENDPOINT, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-          keepalive: true
-        }).catch(err => {
-          console.warn("Worker fetch log:", err);
+          body: JSON.stringify(payload)
         });
+
+        if (res.ok) {
+          const resJson = await res.json();
+          if (resJson.leaderboard && Array.isArray(resJson.leaderboard)) {
+            leaderboardData = resJson.leaderboard;
+          }
+        }
       } catch (e) {
-        console.warn("Lỗi khi gửi Worker:", e);
+        console.warn("Không kết nối được Worker hoặc chạy offline:", e);
       }
 
-      displayResults(score10, correctCount, detailedResults, reason);
+      // Nếu chạy offline hoặc Worker chưa trả mảng, tạo bảng rank giả lập từ chính thí sinh
+      if (!leaderboardData || leaderboardData.length === 0) {
+        leaderboardData = [{
+          studentName: currentStudentName,
+          score: parseFloat(score10),
+          correctCount: correctCount,
+          timeSpentSeconds: timeSpentSeconds,
+          violations: tabViolations
+        }];
+      }
+
+      // Hiển thị kết quả & vẽ bảng xếp hạng
+      displayResults(score10, correctCount, timeSpentSeconds, detailedResults, reason, leaderboardData);
     }
 
     /* ==========================================================
-       9. HIỂN THỊ KẾT QUẢ VÀ GIẢI THÍCH CHI TIẾT
+       9. HIỂN THỊ KẾT QUẢ & VẼ BẢNG RANKING
        ========================================================== */
-    function displayResults(score10, correctCount, detailedResults, reason) {
+    function displayResults(score10, correctCount, timeSpentSeconds, detailedResults, reason, leaderboard) {
       viewQuiz.style.display = 'none';
       viewResult.style.display = 'block';
 
       document.getElementById('resultScore').textContent = score10;
-      document.getElementById('resultStudentMeta').textContent = `Thí sinh: ${currentStudentName} • Thời gian nộp: ${new Date().toLocaleTimeString('vi-VN')}`;
+      document.getElementById('resultStudentMeta').textContent = `Thí sinh: ${currentStudentName} • ${reason === 'tab_violation_limit' ? 'Bị ép nộp (rời tab)' : 'Tự nộp'}`;
       document.getElementById('resultCorrectCount').textContent = `${correctCount}/20`;
       document.getElementById('resultAccuracy').textContent = `${Math.round((correctCount / 20) * 100)}%`;
+      document.getElementById('resultTimeSpent').textContent = `${timeSpentSeconds}s`;
       document.getElementById('resultViolations').textContent = `${tabViolations} lần`;
 
-      const statusEl = document.getElementById('resultStatusText');
-      if (reason === 'tab_violation_limit') {
-        statusEl.textContent = "Bị ép nộp do vi phạm tab";
-        statusEl.style.color = "var(--danger)";
-      } else {
-        statusEl.textContent = "Nộp bài thành công";
-        statusEl.style.color = "var(--success)";
-      }
+      // 1. Render Bảng Xếp Hạng (Rank Table)
+      renderLeaderboard(leaderboard);
 
+      // 2. Render Review Đáp án chi tiết
       const reviewContainer = document.getElementById('reviewContainer');
       reviewContainer.innerHTML = '';
 
@@ -1464,6 +1587,38 @@
       });
 
       window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Hàm vẽ bảng Leaderboard
+    function renderLeaderboard(leaderboard) {
+      const tbody = document.getElementById('leaderboardBody');
+      const totalEl = document.getElementById('leaderboardTotal');
+      tbody.innerHTML = '';
+
+      totalEl.textContent = `Tổng cộng: ${leaderboard.length} bài thi`;
+
+      leaderboard.forEach((entry, index) => {
+        const rank = index + 1;
+        const isMe = entry.studentName.trim().toLowerCase() === currentStudentName.trim().toLowerCase();
+
+        let rankBadgeClass = 'rank-other';
+        let medal = rank;
+        if (rank === 1) { rankBadgeClass = 'rank-1'; medal = '🥇'; }
+        else if (rank === 2) { rankBadgeClass = 'rank-2'; medal = '🥈'; }
+        else if (rank === 3) { rankBadgeClass = 'rank-3'; medal = '🥉'; }
+
+        const row = document.createElement('tr');
+        row.className = `leaderboard-row ${isMe ? 'my-row' : ''}`;
+        row.innerHTML = `
+          <td><span class="rank-num ${rankBadgeClass}">${medal}</span></td>
+          <td><strong>${escapeHtml(entry.studentName)}</strong> ${isMe ? '<span style="color:var(--orange-primary); font-size: 0.75rem;">(Bạn)</span>' : ''}</td>
+          <td style="font-weight: 800; color: #FFA366;">${Number(entry.score).toFixed(1)}</td>
+          <td>${entry.correctCount}/20</td>
+          <td>${entry.timeSpentSeconds || 0}s</td>
+          <td style="color: ${entry.violations > 0 ? '#F87171' : 'var(--text-muted)'};">${entry.violations || 0} lần</td>
+        `;
+        tbody.appendChild(row);
+      });
     }
 
     document.getElementById('btnRestart').addEventListener('click', () => {
