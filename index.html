@@ -55,7 +55,6 @@
       padding: 20px 14px 60px;
     }
 
-    /* Ambient Background Orbs */
     .ambient-glow {
       position: fixed;
       border-radius: 50%;
@@ -86,7 +85,6 @@
       margin: 0 auto;
     }
 
-    /* GLASS CARD BASE */
     .glass-card {
       background: var(--glass-card);
       backdrop-filter: blur(20px);
@@ -97,7 +95,6 @@
       transition: all 0.3s ease;
     }
 
-    /* HEADER */
     .quiz-header {
       text-align: center;
       margin-bottom: 24px;
@@ -132,7 +129,6 @@
       font-size: 0.95rem;
     }
 
-    /* BUTTONS */
     .btn {
       display: inline-flex;
       align-items: center;
@@ -167,7 +163,6 @@
       background: rgba(255, 255, 255, 0.12);
     }
 
-    /* SCREEN 1: LOGIN / ENROLL */
     #view-login {
       padding: 40px 28px;
       text-align: center;
@@ -228,12 +223,10 @@
       color: #FFA366;
     }
 
-    /* SCREEN 2: QUIZ */
     #view-quiz {
       display: none;
     }
 
-    /* STICKY HUD BAR */
     .hud-bar {
       position: sticky;
       top: 14px;
@@ -280,7 +273,6 @@
       border-color: rgba(239, 68, 68, 0.3);
     }
 
-    /* QUESTION CARD */
     .question-list {
       display: flex;
       flex-direction: column;
@@ -311,7 +303,6 @@
       color: #FFFFFF;
     }
 
-    /* OPTION CHOICES */
     .options-grid {
       display: grid;
       grid-template-columns: 1fr;
@@ -359,13 +350,11 @@
       font-weight: 600;
     }
 
-    /* QUIZ FOOTER SUBMIT */
     .quiz-footer {
       margin-top: 32px;
       text-align: center;
     }
 
-    /* SCREEN 3: RESULT REVIEW */
     #view-result {
       display: none;
     }
@@ -416,7 +405,6 @@
       color: #FFFFFF;
     }
 
-    /* REVIEW QUESTION CARDS */
     .review-status-badge {
       display: inline-flex;
       align-items: center;
@@ -464,7 +452,6 @@
       color: #FFA366;
     }
 
-    /* MODAL POPUPS */
     .modal-overlay {
       position: fixed;
       inset: 0;
@@ -511,7 +498,6 @@
       margin-bottom: 22px;
     }
 
-    /* RESPONSIVE BREAKPOINTS */
     @media (max-width: 640px) {
       body {
         padding: 16px 10px 40px;
@@ -548,19 +534,17 @@
 </head>
 <body>
 
-  <!-- Ambient Glow Effects -->
   <div class="ambient-glow glow-1"></div>
   <div class="ambient-glow glow-2"></div>
 
   <div class="container">
-    <!-- Header chung -->
     <header class="quiz-header">
       <div class="badge-pill">QĐND Việt Nam • Kiểm Tra Kiến Thức</div>
       <h1>Hệ Thống Trắc Nghiệm Quân Sự</h1>
       <p>Ngân hàng 50 câu • Trích xuất ngẫu nhiên 20 câu • Hệ thống kiểm soát bảo mật</p>
     </header>
 
-    <!-- ==================== VIEW 1: ĐĂNG NHẬP NHẬP TÊN ==================== -->
+    <!-- VIEW 1: ĐĂNG NHẬP -->
     <main id="view-login" class="glass-card">
       <div class="login-icon">🛡️</div>
       <h2 style="font-size: 1.4rem; font-weight: 800; margin-bottom: 6px;">Bắt Đầu Bài Kiểm Tra</h2>
@@ -593,9 +577,8 @@
       </button>
     </main>
 
-    <!-- ==================== VIEW 2: LÀM BÀI QUIZ ==================== -->
+    <!-- VIEW 2: LÀM BÀI QUIZ -->
     <section id="view-quiz">
-      <!-- Sticky HUD -->
       <div class="hud-bar glass-card">
         <div class="hud-user">
           <span class="hud-user-name" id="hudName">Thí sinh</span>
@@ -607,10 +590,8 @@
         </div>
       </div>
 
-      <!-- Danh sách câu hỏi -->
       <div class="question-list" id="questionContainer"></div>
 
-      <!-- Footer nộp bài -->
       <div class="quiz-footer">
         <button id="btnSubmitQuiz" class="btn btn-orange" style="min-width: 240px;">
           Nộp Bài Kiểm Tra 📝
@@ -618,7 +599,7 @@
       </div>
     </section>
 
-    <!-- ==================== VIEW 3: HIỂN THỊ KẾT QUẢ ==================== -->
+    <!-- VIEW 3: HIỂN THỊ KẾT QUẢ -->
     <section id="view-result">
       <div class="result-summary glass-card">
         <div class="score-circle">
@@ -642,7 +623,6 @@
         </div>
       </div>
 
-      <!-- Chi tiết giải thích từng câu hỏi -->
       <h3 style="font-size: 1.25rem; font-weight: 800; margin: 30px 0 16px; color: #FFFFFF;">
         Chi Tiết Bài Làm & Đáp Án Chuẩn Xác
       </h3>
@@ -650,7 +630,7 @@
     </section>
   </div>
 
-  <!-- MODAL CẢNH BÁO VI PHẠM RỜI TAB LẦN 1 -->
+  <!-- MODAL CẢNH BÁO VI PHẠM LẦN 1 -->
   <div id="modalTabWarning" class="modal-overlay">
     <div class="modal-dialog">
       <div class="modal-icon">⚠️</div>
@@ -665,7 +645,7 @@
     </div>
   </div>
 
-  <!-- MODAL THÔNG BÁO TỰ ĐỘNG THU BÀI DO RỜI TAB LẦN 2 -->
+  <!-- MODAL TỰ ĐỘNG THU BÀI LẦN 2 -->
   <div id="modalAutoSubmit" class="modal-overlay">
     <div class="modal-dialog">
       <div class="modal-icon">🚫</div>
@@ -679,13 +659,12 @@
 
   <script>
     /* ==========================================================
-       1. CẤU HÌNH CLOUDFLARE WORKER ENDPOINT
+       1. CẤU HÌNH CLOUDFLARE WORKER ENDPOINT CHÍNH THỨC
        ========================================================== */
-    // Thay đổi URL bên dưới thành URL Worker của bạn khi deploy
-    const WORKER_ENDPOINT = "https://your-quiz-worker.workers.dev/submit";
+    const WORKER_ENDPOINT = "https://quiz.vinhgiang782007.workers.dev";
 
     /* ==========================================================
-       2. KHO 50 CÂU HỎI TRẮC NGHIỆM ĐẦY ĐỦ TỪ DỮ LIỆU
+       2. KHO 50 CÂU HỎI TRẮC NGHIỆM ĐẦY ĐỦ
        ========================================================== */
     const QUESTION_BANK = [
       {
@@ -1176,11 +1155,11 @@
     ];
 
     /* ==========================================================
-       3. TRẠNG THÁI ỨNG DỤNG (STATE MANAGEMENT)
+       3. TRẠNG THÁI ỨNG DỤNG
        ========================================================== */
     let currentStudentName = "";
-    let activeQuestions = []; // 20 câu được random
-    let userAnswers = {};     // { questionIndex: 'A' | 'B' | 'C' | 'D' }
+    let activeQuestions = [];
+    let userAnswers = {};
     let isQuizActive = false;
     let isSubmitted = false;
     let tabViolations = 0;
@@ -1222,17 +1201,13 @@
       userAnswers = {};
       startTime = new Date();
 
-      // Rút ngẫu nhiên 20 câu hỏi
       activeQuestions = getRandom20Questions();
 
-      // Cập nhật giao diện HUD
       document.getElementById('hudName').textContent = currentStudentName;
       updateHud();
 
-      // Render danh sách câu hỏi
       renderQuestions();
 
-      // Chuyển view
       viewLogin.style.display = 'none';
       viewResult.style.display = 'none';
       viewQuiz.style.display = 'block';
@@ -1242,7 +1217,7 @@
     }
 
     /* ==========================================================
-       6. RENDER 20 CÂU HỎI
+       6. RENDER CÂU HỎI
        ========================================================== */
     const questionContainer = document.getElementById('questionContainer');
 
@@ -1286,11 +1261,9 @@
       });
     }
 
-    // Xử lý khi thí sinh chọn đáp án
     window.handleSelectOption = function(qIndex, letter) {
       userAnswers[qIndex] = letter;
 
-      // Update styling
       const options = ['A', 'B', 'C', 'D'];
       options.forEach(l => {
         const labelEl = document.getElementById(`opt-label-${qIndex}-${l}`);
@@ -1318,9 +1291,7 @@
     }
 
     /* ==========================================================
-       7. CƠ CHẾ CHỐNG THOÁT TAB (TAB SWITCH DETECTION)
-       - Lần 1: Cảnh báo modal
-       - Lần 2: Tự động nộp bài ngay lập tức
+       7. CƠ CHẾ CHỐNG THOÁT TAB
        ========================================================== */
     const modalTabWarning = document.getElementById('modalTabWarning');
     const modalAutoSubmit = document.getElementById('modalAutoSubmit');
@@ -1334,15 +1305,12 @@
       if (!isQuizActive || isSubmitted) return;
 
       if (document.hidden) {
-        // Người dùng đã rời khỏi tab hiện tại
         tabViolations++;
         updateHud();
 
         if (tabViolations === 1) {
-          // Bật cờ cảnh báo lần 1
           modalTabWarning.classList.add('active');
         } else if (tabViolations >= 2) {
-          // Thoát tab lần 2 -> Tự động nộp bài
           modalTabWarning.classList.remove('active');
           modalAutoSubmit.classList.add('active');
 
@@ -1375,7 +1343,6 @@
       const finishTime = new Date();
       const timeSpentSeconds = Math.round((finishTime - startTime) / 1000);
 
-      // Chấm điểm ở Front-end
       let correctCount = 0;
       const detailedResults = activeQuestions.map((q, idx) => {
         const userChoice = userAnswers[idx] || null;
@@ -1393,10 +1360,9 @@
         };
       });
 
-      // Điểm số theo thang 10
       const score10 = ((correctCount / 20) * 10).toFixed(1);
 
-      // 1 LẦN REQUEST DUY NHẤT LÊN CLOUDFLARE WORKER
+      // GỬI 1 LẦN DUY NHẤT LÊN CLOUDFLARE WORKER
       const payload = {
         studentName: currentStudentName,
         score: parseFloat(score10),
@@ -1413,15 +1379,14 @@
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
-          keepalive: true // Đảm bảo request vẫn được gửi nếu tab tắt
+          keepalive: true
         }).catch(err => {
-          console.warn("Worker fetch log (Chế độ local hoặc offline):", err);
+          console.warn("Worker fetch log:", err);
         });
       } catch (e) {
         console.warn("Lỗi khi gửi Worker:", e);
       }
 
-      // Hiển thị kết quả lên giao diện
       displayResults(score10, correctCount, detailedResults, reason);
     }
 
@@ -1447,7 +1412,6 @@
         statusEl.style.color = "var(--success)";
       }
 
-      // Render danh sách câu hỏi kèm đáp án đúng & giải thích
       const reviewContainer = document.getElementById('reviewContainer');
       reviewContainer.innerHTML = '';
 
@@ -1502,7 +1466,6 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // Làm lại bài mới
     document.getElementById('btnRestart').addEventListener('click', () => {
       viewResult.style.display = 'none';
       viewLogin.style.display = 'block';
@@ -1510,7 +1473,6 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });
 
-    // Helper bảo mật chống XSS
     function escapeHtml(str) {
       if (!str) return '';
       return str
